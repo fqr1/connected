@@ -35,6 +35,7 @@ class test2Controller: UIViewController {
         fillButtons()
         fillItemsForConstraint()
         fillConstraints()
+        fillEventsForButtons()
     }
     
     func fillButtons(){
@@ -45,6 +46,7 @@ class test2Controller: UIViewController {
                 newButton.translatesAutoresizingMaskIntoConstraints = false
                 newButton.setTitle("[\(i),\(j)]", forState: .Normal)
                 newButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
+                newButton.tag = (i*10) + j
                 if j % 2 == 0{
                     newButton.backgroundColor = UIColor.greenColor()
                 }
@@ -206,11 +208,59 @@ class test2Controller: UIViewController {
     }
     */
     
+    func fillEventsForButtons(){
+        for i in 0 ..< buttons.count{
+            for j in 0 ..< buttons[i].count{
+                setEventForButton(buttons[i][j])
+            }
+        }
+    }
     
-
+    func setEventForButton(b1: UIButton){
+        addSwipe(b1)
+    }
+    
+    func addSwipe(button:UIButton) {
+        let directions: [UISwipeGestureRecognizerDirection] = [.Right, .Left, .Up, .Down]
+        for direction in directions {
+            let gesture = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipe:"))
+            gesture.direction = direction
+            button.addGestureRecognizer(gesture)
+        }
+    }
+    
+    func handleSwipe(swipeGesture: UISwipeGestureRecognizer) {
+        
+        
+        if let button = swipeGesture.view as? UIButton{
+            print("TAG: \(button.tag)")
+            print("[\(button.tag.getI()),\(button.tag.getJ())]")
+            
+            switch swipeGesture.direction {
+            case UISwipeGestureRecognizerDirection.Right:
+                print("Swiped right")
+            case UISwipeGestureRecognizerDirection.Down:
+                print("Swiped down")
+            case UISwipeGestureRecognizerDirection.Left:
+                print("Swiped left")
+            case UISwipeGestureRecognizerDirection.Up:
+                print("Swiped up")
+            default:
+                break
+            }
+        }
+    }
 }
 
-
+extension Int{
+    func getI()->Int{
+        return self / 10
+    }
+    
+    func getJ()->Int{
+        return self % 10
+    }
+}
 
 
 
